@@ -1,0 +1,11 @@
+app:
+  build: mattermost
+  links:
+    - db:db
+  ports:
+    - "8065:8065"
+  env_file: mattermost.env
+
+db:
+  image: postgres:9.5
+  env_file: mattermost.env
