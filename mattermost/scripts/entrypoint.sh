@@ -34,6 +34,16 @@ if [ ! -d $APP_HOME/config ]; then
 		jq ".FileSettings.Directory = \"$APP_HOME/data\"" \
 		> $APP_HOME/config/docker.json.tmp && \
 	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
+
+	# Generate salt
+	cat $APP_HOME/config/docker.json | \
+		jq ".EmailSettings.InviteSalt = \"$(head -c1M /dev/urandom | sha1sum | cut -d' ' -f1)\"" | \
+		jq ".EmailSettings.PasswordResetSalt = \"$(head -c1M /dev/urandom | sha1sum | cut -d' ' -f1)\"" | \
+		jq ".FileSettings.PublicLinkSalt = \"$(head -c1M /dev/urandom | sha1sum | cut -d' ' -f1)\"" | \
+		jq ".SqlSettings.AtRestEncryptKey = \"$(head -c1M /dev/urandom | sha1sum | cut -d' ' -f1)\"" \
+		> $APP_HOME/config/docker.json.tmp && \
+	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
+
 fi
 
 # Force db settings
