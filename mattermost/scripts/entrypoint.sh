@@ -69,4 +69,11 @@ do
 done
 
 cd "/opt/mattermost"
-exec gosu "$APP_USER" bin/platform --config="$APP_HOME/config/docker.json" $@
+# Start
+if [ ! -z "$@" ]; then
+	# Custom command
+	exec gosu "$APP_USER" $@
+else
+	# Default start
+	exec gosu "$APP_USER" bin/platform --config="$APP_HOME/config/docker.json"
+fi
