@@ -8,6 +8,10 @@ if [ -z "$POSTGRES_DB" -o -z "$POSTGRES_USER" -o -z "$POSTGRES_PASSWORD" ]; then
 	exit 1
 fi
 
+# DB
+: ${PG_HOST:="db"}
+: ${PG_PORT:="5432"}
+
 # Data
 if [ ! -d $APP_HOME/data ]; then
 	mkdir $APP_HOME/data
@@ -30,6 +34,7 @@ if [ ! -d $APP_HOME/config ]; then
 	cp /opt/mattermost/config/config.json $APP_HOME/config/docker.json
 
 	cat $APP_HOME/config/docker.json | \
+		jq ".ComplianceSettings.Directory = \"$APP_HOME/data\"" | \
 		jq ".LogSettings.FileLocation = \"$APP_HOME/logs/app.log\"" | \
 		jq ".FileSettings.Directory = \"$APP_HOME/data\"" \
 		> $APP_HOME/config/docker.json.tmp && \
@@ -49,7 +54,7 @@ fi
 # Force db settings
 cat $APP_HOME/config/docker.json | \
 	jq ".SqlSettings.DriverName = \"postgres\"" | \
- 	jq ".SqlSettings.DataSource = \"postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB?sslmode=disable&connect_timeout=10\"" \
+ 	jq ".SqlSettings.DataSource = \"postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$PG_HOST:$PG_PORT/$POSTGRES_DB?sslmode=disable&connect_timeout=10\"" \
 	> $APP_HOME/config/docker.json.tmp && \
 mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
 
@@ -58,10 +63,10 @@ chown $APP_USER:$APP_USER $APP_HOME/config/docker.json
 
 # Waiting for db
 echo "Waiting for db ..."
-while ! nc -w 1 db 5432 2>/dev/null
+while ! nc -w 1 $PG_HOST $PG_PORT 1>/dev/null 2>&1
 do
   sleep 5
 done
 
 cd "/opt/mattermost"
-exec gosu "$APP_USER" bin/platform --config="$APP_HOME/config/docker.json"
+exec gosu "$APP_USER" bin/platform --config="$APP_HOME/config/docker.json" $@
