@@ -2,7 +2,7 @@
 FROM debian:jessie
 MAINTAINER s7b4 <baron.stephane@gmail.com>
 
-ENV APP_VERSION 3.0.3
+ENV APP_VERSION 3.1.0
 ENV APP_USER mattermost
 ENV APP_HOME /home/$APP_USER
 
