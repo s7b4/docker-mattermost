@@ -2,7 +2,8 @@
 FROM debian:jessie
 MAINTAINER s7b4 <baron.stephane@gmail.com>
 
-ENV APP_VERSION 3.2.0
+ENV GOSU_VERSION 1.9
+ENV APP_VERSION 3.3.0
 ENV APP_USER mattermost
 ENV APP_HOME /home/$APP_USER
 
@@ -20,8 +21,8 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Gosu
-RUN curl -o /usr/local/sbin/gosu -sSL "https://github.com/tianon/gosu/releases/download/1.9/gosu-$(dpkg --print-architecture)" \
-	&& chmod +x /usr/local/sbin/gosu
+RUN curl -o /usr/local/sbin/gosu -sSL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+&& chmod +x /usr/local/sbin/gosu
 
 # Install Mattermost
 RUN mkdir -p /opt/mattermost && \
