@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER s7b4 <baron.stephane@gmail.com>
 
 ENV GOSU_VERSION 1.9
-ENV APP_VERSION 3.4.0
+ENV APP_VERSION 3.5.1
 ENV APP_USER mattermost
 ENV APP_HOME /home/$APP_USER
 
