@@ -24,6 +24,12 @@ if [ ! -d $APP_HOME/logs ]; then
 	chown $APP_USER:$APP_USER $APP_HOME/logs
 fi
 
+# Cache letsencrypt
+if [ ! -d $APP_HOME/cache/letsencrypt ]; then
+	mkdir -p $APP_HOME/cache/letsencrypt
+	chown $APP_USER:$APP_USER $APP_HOME/cache/letsencrypt
+fi
+
 # Config
 if [ ! -d $APP_HOME/config ]; then
 
@@ -36,7 +42,8 @@ if [ ! -d $APP_HOME/config ]; then
 	cat $APP_HOME/config/docker.json | \
 		jq ".ComplianceSettings.Directory = \"$APP_HOME/data\"" | \
 		jq ".LogSettings.FileLocation = \"$APP_HOME/logs/app.log\"" | \
-		jq ".FileSettings.Directory = \"$APP_HOME/data\"" \
+		jq ".FileSettings.Directory = \"$APP_HOME/data\"" | \
+		jq ".ServiceSettings.LetsEncryptCertificateCacheFile = \"$APP_HOME/cache/letsencrypt\"" \
 		> $APP_HOME/config/docker.json.tmp && \
 	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
 
