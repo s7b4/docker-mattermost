@@ -2,8 +2,8 @@
 FROM debian:jessie
 MAINTAINER s7b4 <baron.stephane@gmail.com>
 
-ENV GOSU_VERSION 1.9
-ENV APP_VERSION 3.5.1
+ENV GOSU_VERSION 1.10
+ENV APP_VERSION 3.6.1
 ENV APP_USER mattermost
 ENV APP_HOME /home/$APP_USER
 
@@ -21,12 +21,12 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Gosu
-RUN curl -o /usr/local/sbin/gosu -sSL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+RUN curl -o /usr/local/sbin/gosu -sSL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
 && chmod +x /usr/local/sbin/gosu
 
 # Install Mattermost
 RUN mkdir -p /opt/mattermost && \
-	curl -s "https://releases.mattermost.com/$APP_VERSION/mattermost-team-$APP_VERSION-linux-$(dpkg --print-architecture).tar.gz" | \
+	curl -s "https://releases.mattermost.com/$APP_VERSION/mattermost-team-$APP_VERSION-linux-$(dpkg --print-architecture | awk -F- '{ print $NF }').tar.gz" | \
 	tar xzf - --directory /opt/mattermost --strip-components 1
 
 COPY scripts/entrypoint.sh /entrypoint.sh
