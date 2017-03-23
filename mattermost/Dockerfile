@@ -1,6 +1,6 @@
 # Mattermost
 FROM debian:jessie
-MAINTAINER s7b4 <baron.stephane@gmail.com>
+LABEL maintainer "s7b4 <baron.stephane@gmail.com>"
 
 ENV GOSU_VERSION 1.10
 ENV APP_VERSION 3.7.3
