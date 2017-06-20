@@ -1,11 +1,12 @@
 # Mattermost
-FROM debian:jessie
+FROM debian:stretch
 LABEL maintainer "s7b4 <baron.stephane@gmail.com>"
 
-ENV GOSU_VERSION 1.10
-ENV APP_VERSION 3.7.3
-ENV APP_USER mattermost
-ENV APP_HOME /home/$APP_USER
+ENV GOSU_VERSION=1.10 \
+	APP_VERSION=3.10.0 \
+	APP_USER=mattermost
+
+ENV APP_HOME=/home/$APP_USER
 
 # set user/group IDs
 RUN groupadd -r "$APP_USER" --gid=999 && useradd -m -r -g "$APP_USER" --uid=999 "$APP_USER"

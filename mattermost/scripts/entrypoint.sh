@@ -76,6 +76,7 @@ do
 done
 
 cd "/opt/mattermost"
+
 # Start
 if [ ! -z "$@" ]; then
 	# Custom command
