@@ -32,7 +32,7 @@
 	ProxyPreserveHost On
 	RewriteEngine     On
 
-	RewriteCond %{REQUEST_URI}  ^/api/v3/users/websocket [NC,OR]
+	RewriteCond %{REQUEST_URI}  ^/api/v4/websocket       [NC,OR]
 	RewriteCond %{HTTP:UPGRADE} ^WebSocket$              [NC,OR]
 	RewriteCond %{HTTP:CONNECTION} ^Upgrade$             [NC]
 	RewriteRule .* ws://127.0.0.1:8065%{REQUEST_URI}     [P,QSA,L]
@@ -48,9 +48,9 @@
 	RequestHeader unset If-Modified-Since
 	RequestHeader unset If-None-Match
 
-	<Location /api/v3/users/websocket>
+	<Location /api/v4/websocket>
 	        Require all granted
-	        ProxyPassReverse ws://127.0.0.1:8065/api/v3/users/websocket
+	        ProxyPassReverse ws://127.0.0.1:8065/api/v4/websocket
 	        ProxyPassReverseCookieDomain 127.0.0.1 <domain>
 	</Location>
 
