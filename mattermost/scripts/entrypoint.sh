@@ -65,9 +65,9 @@ cat $APP_HOME/config/docker.json | \
 	> $APP_HOME/config/docker.json.tmp && \
 mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
 
-# Compat logs v4.2+
-if [ -f $APP_HOME/logs/app.log ]; then
-	mv $APP_HOME/logs/app.log $APP_HOME/logs/mattermost.log
+# BUG Compat logs v4.2+
+if [ -f $APP_HOME/logs/app.logmattermost.log ]; then
+	mv $APP_HOME/logs/app.logmattermost.log $APP_HOME/logs/mattermost.log
 	cat $APP_HOME/config/docker.json | \
 		jq ".LogSettings.FileLocation = \"$APP_HOME/logs\"" \
 		> $APP_HOME/config/docker.json.tmp && \
