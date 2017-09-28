@@ -41,7 +41,7 @@ if [ ! -d $APP_HOME/config ]; then
 
 	cat $APP_HOME/config/docker.json | \
 		jq ".ComplianceSettings.Directory = \"$APP_HOME/data\"" | \
-		jq ".LogSettings.FileLocation = \"$APP_HOME/logs/app.log\"" | \
+		jq ".LogSettings.FileLocation = \"$APP_HOME/logs\"" | \
 		jq ".FileSettings.Directory = \"$APP_HOME/data\"" | \
 		jq ".ServiceSettings.LetsEncryptCertificateCacheFile = \"$APP_HOME/cache/letsencrypt\"" \
 		> $APP_HOME/config/docker.json.tmp && \
@@ -64,6 +64,15 @@ cat $APP_HOME/config/docker.json | \
  	jq ".SqlSettings.DataSource = \"postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$PG_HOST:$PG_PORT/$POSTGRES_DB?sslmode=disable&connect_timeout=10\"" \
 	> $APP_HOME/config/docker.json.tmp && \
 mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
+
+# Compat logs v4.2+
+if [ -f $APP_HOME/logs/app.log ]; then
+	mv $APP_HOME/logs/app.log $APP_HOME/logs/mattermost.log
+	cat $APP_HOME/config/docker.json | \
+		jq ".LogSettings.FileLocation = \"$APP_HOME/logs\"" \
+		> $APP_HOME/config/docker.json.tmp && \
+	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
+fi
 
 # Config RW
 chown $APP_USER:$APP_USER $APP_HOME/config/docker.json
