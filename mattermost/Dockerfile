@@ -3,7 +3,7 @@ FROM debian:stretch
 LABEL maintainer = "s7b4 <baron.stephane@gmail.com>"
 
 ENV GOSU_VERSION=1.10 \
-	APP_VERSION=4.3.1 \
+	APP_VERSION=4.4.2 \
 	APP_USER=mattermost
 
 ENV APP_HOME=/home/$APP_USER
