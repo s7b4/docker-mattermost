@@ -12,6 +12,9 @@ fi
 : ${PG_HOST:="db"}
 : ${PG_PORT:="5432"}
 
+# HOME
+APP_HOME=/home/$APP_USER
+
 # Data
 if [ ! -d $APP_HOME/data ]; then
 	mkdir $APP_HOME/data
@@ -89,8 +92,8 @@ cd "/opt/mattermost"
 # Start
 if [ ! -z "$@" ]; then
 	# Custom command
-	exec gosu "$APP_USER" $@
+	exec runuser -u "$APP_USER" -- $@
 else
 	# Default start
-	exec gosu "$APP_USER" bin/platform --config="$APP_HOME/config/docker.json"
+	exec runuser -u "$APP_USER" -- bin/platform --config="$APP_HOME/config/docker.json"
 fi
