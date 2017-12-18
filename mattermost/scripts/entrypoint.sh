@@ -8,6 +8,14 @@ if [ -z "$POSTGRES_DB" -o -z "$POSTGRES_USER" -o -z "$POSTGRES_PASSWORD" ]; then
 	exit 1
 fi
 
+function createMissingDir {
+	if [ ! -d "${1}" ]; then
+		echo "Create ${1}"
+		mkdir -p "${1}"
+		chown $APP_USER:$APP_USER "${1}"
+	fi
+}
+
 # DB
 : ${PG_HOST:="db"}
 : ${PG_PORT:="5432"}
@@ -15,23 +23,12 @@ fi
 # HOME
 APP_HOME=/home/$APP_USER
 
-# Data
-if [ ! -d $APP_HOME/data ]; then
-	mkdir $APP_HOME/data
-	chown $APP_USER:$APP_USER $APP_HOME/data
-fi
-
-# Logs
-if [ ! -d $APP_HOME/logs ]; then
-	mkdir $APP_HOME/logs
-	chown $APP_USER:$APP_USER $APP_HOME/logs
-fi
-
-# Cache letsencrypt
-if [ ! -d $APP_HOME/cache/letsencrypt ]; then
-	mkdir -p $APP_HOME/cache/letsencrypt
-	chown $APP_USER:$APP_USER $APP_HOME/cache/letsencrypt
-fi
+# Dirs
+createMissingDir $APP_HOME/data
+createMissingDir $APP_HOME/logs
+createMissingDir $APP_HOME/cache/letsencrypt
+createMissingDir $APP_HOME/plugins
+createMissingDir $APP_HOME/client/plugins
 
 # Config
 if [ ! -d $APP_HOME/config ]; then
@@ -47,6 +44,8 @@ if [ ! -d $APP_HOME/config ]; then
 		jq ".LogSettings.FileLocation = \"$APP_HOME/logs\"" | \
 		jq ".FileSettings.Directory = \"$APP_HOME/data\"" | \
 		jq ".ServiceSettings.LetsEncryptCertificateCacheFile = \"$APP_HOME/cache/letsencrypt\"" \
+		jq ".PluginSettings.Directory = \"$APP_HOME/plugins\"" | \
+		jq ".PluginSettings.ClientDirectory = \"$APP_HOME/client/plugins\"" | \
 		> $APP_HOME/config/docker.json.tmp && \
 	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
 
