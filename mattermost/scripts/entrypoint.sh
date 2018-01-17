@@ -43,9 +43,9 @@ if [ ! -d $APP_HOME/config ]; then
 		jq ".ComplianceSettings.Directory = \"$APP_HOME/data\"" | \
 		jq ".LogSettings.FileLocation = \"$APP_HOME/logs\"" | \
 		jq ".FileSettings.Directory = \"$APP_HOME/data\"" | \
-		jq ".ServiceSettings.LetsEncryptCertificateCacheFile = \"$APP_HOME/cache/letsencrypt\"" \
+		jq ".ServiceSettings.LetsEncryptCertificateCacheFile = \"$APP_HOME/cache/letsencrypt\"" | \
 		jq ".PluginSettings.Directory = \"$APP_HOME/plugins\"" | \
-		jq ".PluginSettings.ClientDirectory = \"$APP_HOME/client/plugins\"" | \
+		jq ".PluginSettings.ClientDirectory = \"$APP_HOME/client/plugins\"" \
 		> $APP_HOME/config/docker.json.tmp && \
 	mv $APP_HOME/config/docker.json.tmp $APP_HOME/config/docker.json
 

@@ -7,5 +7,5 @@ app:
   env_file: mattermost.env
 
 db:
-  image: postgres:9.5
+  image: postgres:10.1
   env_file: mattermost.env
