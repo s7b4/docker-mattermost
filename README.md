@@ -24,7 +24,7 @@
 
 
 	db:
-	  image: postgres:9.5
+	  image: postgres:10.1
 	  env_file: mattermost.env
 
 ## Apache proxy
@@ -32,13 +32,13 @@
 	ProxyPreserveHost On
 	RewriteEngine     On
 
-	RewriteCond %{REQUEST_URI}  ^/api/v4/websocket       [NC,OR]
-	RewriteCond %{HTTP:UPGRADE} ^WebSocket$              [NC,OR]
-	RewriteCond %{HTTP:CONNECTION} ^Upgrade$             [NC]
-	RewriteRule .* ws://127.0.0.1:8065%{REQUEST_URI}     [P,QSA,L]
+	RewriteCond %{HTTP:Upgrade} websocket                [NC]
+	RewriteCond %{HTTP:Connection} Upgrade               [NC]
+	RewriteRule .* ws://<ip>:<port>%{REQUEST_URI}        [P,QSA,L]
 
-	RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME}     !-f
-	RewriteRule .* http://127.0.0.1:8065%{REQUEST_URI}   [P,QSA,L]
+	ProxyPass / http://<ip>:<port>/
+	ProxyPassReverse / http://<ip>:<port>/
+	ProxyPassReverseCookieDomain <ip> <fqdn>
 
 	# HTTPS
 	RequestHeader set X-Forwarded-Proto "https"
@@ -47,15 +47,3 @@
 	# Prevent apache from sending incorrect 304 status updates
 	RequestHeader unset If-Modified-Since
 	RequestHeader unset If-None-Match
-
-	<Location /api/v4/websocket>
-	        Require all granted
-	        ProxyPassReverse ws://127.0.0.1:8065/api/v4/websocket
-	        ProxyPassReverseCookieDomain 127.0.0.1 <domain>
-	</Location>
-
-	<Location />
-	        Require all granted
-	        ProxyPassReverse http://127.0.0.1:8065/
-	        ProxyPassReverseCookieDomain 127.0.0.1 <domain>
-	</Location>
