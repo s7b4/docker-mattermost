@@ -2,7 +2,7 @@
 FROM debian:stretch
 LABEL maintainer = "s7b4 <baron.stephane@gmail.com>"
 
-ENV APP_VERSION=4.7.2 \
+ENV APP_VERSION=4.8.0 \
 	APP_USER=mattermost
 
 # set user/group IDs
