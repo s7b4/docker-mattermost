@@ -94,5 +94,5 @@ if [ ! -z "$@" ]; then
 	exec runuser -u "$APP_USER" -- $@
 else
 	# Default start
-	exec runuser -u "$APP_USER" -- bin/platform --config="$APP_HOME/config/docker.json"
+	exec runuser -u "$APP_USER" -- bin/mattermost --config="$APP_HOME/config/docker.json"
 fi
