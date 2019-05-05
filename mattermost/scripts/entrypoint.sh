@@ -81,7 +81,7 @@ fi
 chown $APP_USER:$APP_USER $APP_HOME/config/docker.json
 
 # Fix webserver
-if [ -d /opt/mattermost/client]; then
+if [ -d /opt/mattermost/client ]; then
 	cp -rf /opt/mattermost/client/. $APP_HOME/client/html/
 	rm -rf /opt/mattermost/client
 	ln -vs $APP_HOME/client/html /opt/mattermost/client
