@@ -80,12 +80,11 @@ fi
 # Config RW
 chown $APP_USER:$APP_USER $APP_HOME/config/docker.json
 
-# Fix root.html
-if [ -f /opt/mattermost/client/root.html ]; then
-	cp -v /opt/mattermost/client/root.html $APP_HOME/client/html/root.html
-	rm -v /opt/mattermost/client/root.html
-	ln -vs $APP_HOME/client/html/root.html /opt/mattermost/client/root.html
-	chown $APP_USER:$APP_USER /opt/mattermost/client/root.html
+# Fix webserver
+if [ -d /opt/mattermost/client]; then
+	cp -rf /opt/mattermost/client/. $APP_HOME/client/html/
+	rm -rf /opt/mattermost/client
+	ln -vs $APP_HOME/client/html /opt/mattermost/client
 fi
 
 # Waiting for db
