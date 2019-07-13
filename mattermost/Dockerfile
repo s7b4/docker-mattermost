@@ -1,8 +1,8 @@
 # Mattermost
-FROM debian:stretch
+FROM debian:buster
 LABEL maintainer = "s7b4 <baron.stephane@gmail.com>"
 
-ENV APP_VERSION=5.10.0 \
+ENV APP_VERSION=5.12.3 \
 	APP_USER=mattermost
 
 # set user/group IDs
